@@ -5,17 +5,26 @@ namespace MetCSTool
 {
     public partial class MetCSTool : Form
     {
+        KeyboardHook hook = new KeyboardHook();
+        TriggerBot TriggerBot = new TriggerBot(Keys.F);
+        BunnyHop BunnyHop = new BunnyHop(Keys.Space);
+        JumpShot JumpShot = new JumpShot(Keys.V, Keys.Space);
         public MetCSTool()
         {
             InitializeComponent();
             this.ResolutionWidth.Value = Screen.PrimaryScreen.Bounds.Width;
             this.ResolutionHeight.Value = Screen.PrimaryScreen.Bounds.Height;
             AddResolutions();
+
+            KeyboardHook hook = new KeyboardHook();
+
+            hook.KeyDown += (sender, e) => { if (e.KeyCode == this.JumpShot.ToggleKey) { 
+                    if(!this.JumpShotCheckBox.Checked) { return; }
+                    if(JumpShotInEnabled.Checked) { JumpShotInEnabled.Checked = false; }
+                    else { JumpShotInEnabled.Checked = true; }
+                } };
         }
 
-        KeyboardHook hook = new KeyboardHook();
-        TriggerBot TriggerBot = new TriggerBot(Keys.F);
-        BunnyHop BunnyHop = new BunnyHop(Keys.Space);
         private void MainLoop_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
         }
@@ -124,6 +133,40 @@ namespace MetCSTool
             string key = e.KeyCode.ToString();
             button.Text = key;
             this.BunnyHop.Key = e.KeyCode;
+        }
+
+        private void JumpShotCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox checkBox = sender as CheckBox;
+            if (checkBox.Checked) { this.JumpShot.Enabled = true; this.JumpShotInEnabled.Enabled = true; }
+            else { this.JumpShot.Enabled = false; this.JumpShotInEnabled.Enabled = false; }
+        }
+
+        private void JumpBindPick(object sender, KeyEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button == null) { return; }
+            string key = e.KeyCode.ToString();
+            button.Text = key;
+            this.JumpShot.BindKey = e.KeyCode;
+
+        }
+
+        private void JumpTogglePick(object sender, KeyEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button == null) { return; }
+            string key = e.KeyCode.ToString();
+            button.Text = key;
+            this.JumpShot.ToggleKey = e.KeyCode;
+
+        }
+
+        private void JumpShotInEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox checkBox = sender as CheckBox;
+            if (checkBox.Checked) { this.JumpShot.InEnabled = true; }
+            else { this.JumpShot.InEnabled = false; }
         }
     }
 }
