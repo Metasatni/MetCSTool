@@ -44,6 +44,19 @@
             JumpShotCheckBox = new CheckBox();
             MainTabs = new TabControl();
             TriggerBotPage = new TabPage();
+            label6 = new Label();
+            label5 = new Label();
+            label4 = new Label();
+            panel1 = new Panel();
+            TrigCheck8 = new RadioButton();
+            TrigCheck5 = new RadioButton();
+            TrigCheck2 = new RadioButton();
+            TrigCheck7 = new RadioButton();
+            TrigCheck4 = new RadioButton();
+            TrigCheck1 = new RadioButton();
+            TrigCheck6 = new RadioButton();
+            TrigCheck3 = new RadioButton();
+            TrigCheck0 = new RadioButton();
             BunnyHopPage = new TabPage();
             JumpShotPage = new TabPage();
             JumpShotInEnabled = new CheckBox();
@@ -51,13 +64,17 @@
             JumpBind = new Button();
             label3 = new Label();
             JumpShotKey = new Button();
+            SpinBotPage = new TabPage();
+            FakeSpinBotCheckBox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)TriggerLatency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ResolutionWidth).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ResolutionHeight).BeginInit();
             MainTabs.SuspendLayout();
             TriggerBotPage.SuspendLayout();
+            panel1.SuspendLayout();
             BunnyHopPage.SuspendLayout();
             JumpShotPage.SuspendLayout();
+            SpinBotPage.SuspendLayout();
             SuspendLayout();
             // 
             // TriggerBotCheckbox
@@ -198,6 +215,7 @@
             MainTabs.Controls.Add(TriggerBotPage);
             MainTabs.Controls.Add(BunnyHopPage);
             MainTabs.Controls.Add(JumpShotPage);
+            MainTabs.Controls.Add(SpinBotPage);
             MainTabs.Location = new Point(12, 77);
             MainTabs.Name = "MainTabs";
             MainTabs.SelectedIndex = 0;
@@ -206,6 +224,10 @@
             // 
             // TriggerBotPage
             // 
+            TriggerBotPage.Controls.Add(label6);
+            TriggerBotPage.Controls.Add(label5);
+            TriggerBotPage.Controls.Add(label4);
+            TriggerBotPage.Controls.Add(panel1);
             TriggerBotPage.Controls.Add(TriggerBotKey);
             TriggerBotPage.Controls.Add(TriggerBotCheckbox);
             TriggerBotPage.Controls.Add(label1);
@@ -217,6 +239,153 @@
             TriggerBotPage.TabIndex = 0;
             TriggerBotPage.Text = "TriggerBot";
             TriggerBotPage.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(500, 65);
+            label6.Name = "label6";
+            label6.Size = new Size(95, 20);
+            label6.TabIndex = 9;
+            label6.Text = "Trigger point";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(417, 166);
+            label5.Name = "label5";
+            label5.Size = new Size(282, 20);
+            label5.TabIndex = 8;
+            label5.Text = "Your sniper crosshair should be 1px width";
+            // 
+            // label4
+            // 
+            label4.AutoEllipsis = true;
+            label4.AutoSize = true;
+            label4.Location = new Point(372, 146);
+            label4.Name = "label4";
+            label4.Size = new Size(379, 20);
+            label4.TabIndex = 7;
+            label4.Text = "Take note your crosshair can have always the same color";
+            // 
+            // panel1
+            // 
+            panel1.BackgroundImage = Properties.Resources.crosshair1;
+            panel1.BackgroundImageLayout = ImageLayout.Center;
+            panel1.Controls.Add(TrigCheck8);
+            panel1.Controls.Add(TrigCheck5);
+            panel1.Controls.Add(TrigCheck2);
+            panel1.Controls.Add(TrigCheck7);
+            panel1.Controls.Add(TrigCheck4);
+            panel1.Controls.Add(TrigCheck1);
+            panel1.Controls.Add(TrigCheck6);
+            panel1.Controls.Add(TrigCheck3);
+            panel1.Controls.Add(TrigCheck0);
+            panel1.Location = new Point(601, 13);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(150, 130);
+            panel1.TabIndex = 6;
+            // 
+            // TrigCheck8
+            // 
+            TrigCheck8.AutoSize = true;
+            TrigCheck8.ForeColor = SystemColors.ActiveCaptionText;
+            TrigCheck8.Location = new Point(113, 102);
+            TrigCheck8.Name = "TrigCheck8";
+            TrigCheck8.Size = new Size(17, 16);
+            TrigCheck8.TabIndex = 8;
+            TrigCheck8.UseVisualStyleBackColor = true;
+            TrigCheck8.CheckedChanged += TriggerPlace_CheckedChanged;
+            // 
+            // TrigCheck5
+            // 
+            TrigCheck5.AutoSize = true;
+            TrigCheck5.ForeColor = SystemColors.ActiveCaptionText;
+            TrigCheck5.Location = new Point(113, 56);
+            TrigCheck5.Name = "TrigCheck5";
+            TrigCheck5.Size = new Size(17, 16);
+            TrigCheck5.TabIndex = 7;
+            TrigCheck5.UseVisualStyleBackColor = true;
+            TrigCheck5.CheckedChanged += TriggerPlace_CheckedChanged;
+            // 
+            // TrigCheck2
+            // 
+            TrigCheck2.AutoSize = true;
+            TrigCheck2.Checked = true;
+            TrigCheck2.ForeColor = SystemColors.ActiveCaptionText;
+            TrigCheck2.Location = new Point(113, 12);
+            TrigCheck2.Name = "TrigCheck2";
+            TrigCheck2.Size = new Size(17, 16);
+            TrigCheck2.TabIndex = 6;
+            TrigCheck2.TabStop = true;
+            TrigCheck2.UseVisualStyleBackColor = true;
+            TrigCheck2.CheckedChanged += TriggerPlace_CheckedChanged;
+            // 
+            // TrigCheck7
+            // 
+            TrigCheck7.AutoSize = true;
+            TrigCheck7.ForeColor = SystemColors.ActiveCaptionText;
+            TrigCheck7.Location = new Point(67, 102);
+            TrigCheck7.Name = "TrigCheck7";
+            TrigCheck7.Size = new Size(17, 16);
+            TrigCheck7.TabIndex = 5;
+            TrigCheck7.UseVisualStyleBackColor = true;
+            TrigCheck7.CheckedChanged += TriggerPlace_CheckedChanged;
+            // 
+            // TrigCheck4
+            // 
+            TrigCheck4.AutoSize = true;
+            TrigCheck4.ForeColor = SystemColors.ActiveCaptionText;
+            TrigCheck4.Location = new Point(67, 56);
+            TrigCheck4.Name = "TrigCheck4";
+            TrigCheck4.Size = new Size(17, 16);
+            TrigCheck4.TabIndex = 4;
+            TrigCheck4.UseVisualStyleBackColor = true;
+            TrigCheck4.CheckedChanged += TriggerPlace_CheckedChanged;
+            // 
+            // TrigCheck1
+            // 
+            TrigCheck1.AutoSize = true;
+            TrigCheck1.ForeColor = SystemColors.ActiveCaptionText;
+            TrigCheck1.Location = new Point(67, 12);
+            TrigCheck1.Name = "TrigCheck1";
+            TrigCheck1.Size = new Size(17, 16);
+            TrigCheck1.TabIndex = 3;
+            TrigCheck1.UseVisualStyleBackColor = true;
+            TrigCheck1.CheckedChanged += TriggerPlace_CheckedChanged;
+            // 
+            // TrigCheck6
+            // 
+            TrigCheck6.AutoSize = true;
+            TrigCheck6.ForeColor = SystemColors.ActiveCaptionText;
+            TrigCheck6.Location = new Point(16, 102);
+            TrigCheck6.Name = "TrigCheck6";
+            TrigCheck6.Size = new Size(17, 16);
+            TrigCheck6.TabIndex = 2;
+            TrigCheck6.UseVisualStyleBackColor = true;
+            TrigCheck6.CheckedChanged += TriggerPlace_CheckedChanged;
+            // 
+            // TrigCheck3
+            // 
+            TrigCheck3.AutoSize = true;
+            TrigCheck3.ForeColor = SystemColors.ActiveCaptionText;
+            TrigCheck3.Location = new Point(16, 56);
+            TrigCheck3.Name = "TrigCheck3";
+            TrigCheck3.Size = new Size(17, 16);
+            TrigCheck3.TabIndex = 1;
+            TrigCheck3.UseVisualStyleBackColor = true;
+            TrigCheck3.CheckedChanged += TriggerPlace_CheckedChanged;
+            // 
+            // TrigCheck0
+            // 
+            TrigCheck0.AutoSize = true;
+            TrigCheck0.ForeColor = SystemColors.ActiveCaptionText;
+            TrigCheck0.Location = new Point(16, 12);
+            TrigCheck0.Name = "TrigCheck0";
+            TrigCheck0.Size = new Size(17, 16);
+            TrigCheck0.TabIndex = 0;
+            TrigCheck0.UseVisualStyleBackColor = true;
+            TrigCheck0.CheckedChanged += TriggerPlace_CheckedChanged;
             // 
             // BunnyHopPage
             // 
@@ -297,6 +466,27 @@
             JumpShotKey.UseVisualStyleBackColor = true;
             JumpShotKey.KeyDown += JumpTogglePick;
             // 
+            // SpinBotPage
+            // 
+            SpinBotPage.Controls.Add(FakeSpinBotCheckBox);
+            SpinBotPage.Location = new Point(4, 29);
+            SpinBotPage.Name = "SpinBotPage";
+            SpinBotPage.Size = new Size(763, 257);
+            SpinBotPage.TabIndex = 3;
+            SpinBotPage.Text = "Fake SpinBot";
+            SpinBotPage.UseVisualStyleBackColor = true;
+            // 
+            // FakeSpinBotCheckBox
+            // 
+            FakeSpinBotCheckBox.AutoSize = true;
+            FakeSpinBotCheckBox.Location = new Point(30, 17);
+            FakeSpinBotCheckBox.Name = "FakeSpinBotCheckBox";
+            FakeSpinBotCheckBox.Size = new Size(85, 24);
+            FakeSpinBotCheckBox.TabIndex = 0;
+            FakeSpinBotCheckBox.Text = "Enabled";
+            FakeSpinBotCheckBox.UseVisualStyleBackColor = true;
+            FakeSpinBotCheckBox.CheckedChanged += FakeSpinBotCheckBox_CheckedChanged;
+            // 
             // MetCSTool
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -317,10 +507,14 @@
             MainTabs.ResumeLayout(false);
             TriggerBotPage.ResumeLayout(false);
             TriggerBotPage.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             BunnyHopPage.ResumeLayout(false);
             BunnyHopPage.PerformLayout();
             JumpShotPage.ResumeLayout(false);
             JumpShotPage.PerformLayout();
+            SpinBotPage.ResumeLayout(false);
+            SpinBotPage.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -350,5 +544,20 @@
         private Label label3;
         private Button JumpShotKey;
         private CheckBox JumpShotInEnabled;
+        private Panel panel1;
+        private RadioButton TrigCheck0;
+        private RadioButton TrigCheck8;
+        private RadioButton TrigCheck5;
+        private RadioButton TrigCheck2;
+        private RadioButton TrigCheck7;
+        private RadioButton TrigCheck4;
+        private RadioButton TrigCheck1;
+        private RadioButton TrigCheck6;
+        private RadioButton TrigCheck3;
+        private Label label4;
+        private Label label6;
+        private Label label5;
+        private TabPage SpinBotPage;
+        private CheckBox FakeSpinBotCheckBox;
     }
 }

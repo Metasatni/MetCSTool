@@ -9,6 +9,7 @@ namespace MetCSTool
         TriggerBot TriggerBot = new TriggerBot(Keys.F);
         BunnyHop BunnyHop = new BunnyHop(Keys.Space);
         JumpShot JumpShot = new JumpShot(Keys.V, Keys.Space);
+        FakeSpinBot FakeSpinBot = new FakeSpinBot();
         public MetCSTool()
         {
             InitializeComponent();
@@ -18,11 +19,15 @@ namespace MetCSTool
 
             KeyboardHook hook = new KeyboardHook();
 
-            hook.KeyDown += (sender, e) => { if (e.KeyCode == this.JumpShot.ToggleKey) { 
-                    if(!this.JumpShotCheckBox.Checked) { return; }
-                    if(JumpShotInEnabled.Checked) { JumpShotInEnabled.Checked = false; }
+            hook.KeyDown += (sender, e) =>
+            {
+                if (e.KeyCode == this.JumpShot.ToggleKey)
+                {
+                    if (!this.JumpShotCheckBox.Checked) { return; }
+                    if (JumpShotInEnabled.Checked) { JumpShotInEnabled.Checked = false; }
                     else { JumpShotInEnabled.Checked = true; }
-                } };
+                }
+            };
         }
 
         private void MainLoop_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -167,6 +172,19 @@ namespace MetCSTool
             CheckBox checkBox = sender as CheckBox;
             if (checkBox.Checked) { this.JumpShot.InEnabled = true; }
             else { this.JumpShot.InEnabled = false; }
+        }
+
+        private void TriggerPlace_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton checkBox = sender as RadioButton;
+            if (!checkBox.Checked) return;
+            TriggerBot.TriggerPlace = checkBox.Name[checkBox.Name.Length - 1] - 48;
+        }
+
+        private void FakeSpinBotCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox checkBox = sender as CheckBox;
+            if (checkBox.Checked) { this.FakeSpinBot.Enabled = true; } else { this.FakeSpinBot.Enabled = false; }
         }
     }
 }

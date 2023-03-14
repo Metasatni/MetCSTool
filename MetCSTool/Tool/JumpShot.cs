@@ -42,7 +42,5 @@ namespace MetCSTool.Tool
             mouse_event(LEFTDOWN, 0, 0, 0, 0);
             mouse_event(LEFTUP, 0, 0, 0, 0);
         }
-
-
     }
 }
