@@ -29,26 +29,35 @@ namespace MetCSTool.Tool
         {
             this.Enabled = false;
             this.Key = Keys.Z;
-            
+
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += Spinning;
             worker.WorkerSupportsCancellation = true;
-            hook.KeyDown += (sender, e) => { if (e.KeyCode == this.Key) {
-                    prevPos = Cursor.Position;
+            hook.KeyDown += (sender, e) =>
+            {
+                if (e.KeyCode == this.Key)
+                {
+                    if (worker.IsBusy) return;
                     worker.RunWorkerAsync();
-                } };
+                }
+            };
 
-            hook.KeyUp += (sender, e) => { if (e.KeyCode == this.Key) { worker.CancelAsync(); 
-                } };
+            hook.KeyUp += (sender, e) =>
+            {
+                if (e.KeyCode == this.Key)
+                {
+                    worker.CancelAsync();
+                }
+            };
         }
         public void SpinBotActivate()
         {
-            for(int i = 0; i < 10000; i+=100)
-            {
-                mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, i , 2370, 0, 0);
-                mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, -10000, -2370, 0, 0);
-            }
-
+                for (int i = 0; i < 60; i += 1)
+                {
+                    mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, 1000, 0, 0, 0);
+                }
+                mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, -60000, 0, 0, 0);
+            Thread.Sleep(20);
         }
         public void Spinning(object? sender, DoWorkEventArgs e)
         {
@@ -59,6 +68,7 @@ namespace MetCSTool.Tool
                 SpinBotActivate();
                 if (bg.CancellationPending)
                 {
+                    bg.Dispose();
                     e.Cancel = true;
                     return;
                 }

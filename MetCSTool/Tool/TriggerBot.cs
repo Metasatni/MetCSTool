@@ -30,7 +30,15 @@ namespace MetCSTool.Tool
             worker.DoWork += Triggering;
             worker.WorkerSupportsCancellation = true;
             this.TriggerPlace = 2;
-            hook.KeyDown += (sender, e) => { if (e.KeyCode == this.Key) { worker.RunWorkerAsync(); } };
+            hook.KeyDown += (sender, e) =>
+            {
+                if (e.KeyCode == this.Key)
+                {
+                    if (worker.IsBusy) return;
+                    worker.RunWorkerAsync();
+                }
+            };
+
             hook.KeyUp += (sender, e) => { if (e.KeyCode == this.Key) { worker.CancelAsync(); } };
         }
 
@@ -38,12 +46,12 @@ namespace MetCSTool.Tool
         {
             if (!Enabled) return;
             BackgroundWorker bg = (BackgroundWorker)sender;
-            if(bg.IsBusy) return;
             while (true)
             {
                 TriggerBotTriggering();
                 if (bg.CancellationPending)
                 {
+                    bg.Dispose();
                     e.Cancel = true;
                     return;
                 }
