@@ -12,8 +12,6 @@ namespace MetCSTool.Tool
     {
         public bool Enabled { get; set; }
         public Keys Key { get; set; }
-        public Cursor Cursor { get; set; }
-        Point prevPos;
 
 
         [DllImport("user32.dll")]
@@ -21,8 +19,6 @@ namespace MetCSTool.Tool
 
         private const int MOUSEEVENTF_MOVE = 0x0001;
         private const int MOUSEEVENTF_ABSOLUTE = 0x8000;
-        private const int MOUSEEVENTF_LEFTDOWN = 0x0002;
-        private const int MOUSEEVENTF_LEFTUP = 0x0004;
 
         KeyboardHook hook = new KeyboardHook();
         public FakeSpinBot()
@@ -73,8 +69,6 @@ namespace MetCSTool.Tool
                     return;
                 }
             }
-
         }
-
     }
 }

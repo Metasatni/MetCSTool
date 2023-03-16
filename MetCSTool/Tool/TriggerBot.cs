@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.Metrics;
 using System.Drawing.Imaging;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 
 namespace MetCSTool.Tool
@@ -68,13 +71,21 @@ namespace MetCSTool.Tool
         public void TriggerBotTriggering()
         {
             _color = GetColor(GetPoint());
+            Thread.Sleep(3);
             Color color = GetColor(GetPoint());
+            Bitmap ss1 = TookScreenshot();
+            Thread.Sleep(3);
+            Bitmap ss2 = TookScreenshot();
+
+            if (FlashCheck(ss1, ss2)) { 
+                return;
+            }
             if (ColorCheck(color, _color))
             {
                 Thread.Sleep(LatencyInMs);
                 _color = color;
                 PerformLeftClick();
-                Thread.Sleep(300);
+                Thread.Sleep(500);
             }
         }
 
@@ -85,6 +96,54 @@ namespace MetCSTool.Tool
             lpPoint.X = ResolutionWidth / 2;
             lpPoint.Y = ResolutionHeight / 2;
             return lpPoint;
+        }
+        private bool FlashCheck(Bitmap screenshot, Bitmap screenshot2)
+        {
+            List<int> rgbs1 = new List<int>();
+            List<int> rgbs2 = new List<int>();
+            int counter = 0;
+            
+
+           for(int i = 0; i < screenshot.Width; i++)
+            {
+                for (int j = 0; j < screenshot.Height; j++)
+                {
+                    rgbs1.Add(screenshot.GetPixel(i, j).R);
+                    rgbs1.Add(screenshot.GetPixel(i, j).G);
+                    rgbs1.Add(screenshot.GetPixel(i, j).B);
+                }
+            } 
+            for(int i = 0; i < screenshot2.Width; i++)
+            {
+                for (int j = 0; j < screenshot2.Height; j++)
+                {
+                    rgbs2.Add(screenshot2.GetPixel(i, j).R);
+                    rgbs2.Add(screenshot2.GetPixel(i, j).G);
+                    rgbs2.Add(screenshot2.GetPixel(i, j).B);
+                }
+            } 
+            for(int i = 0; i < rgbs1.Count; i++)
+            {
+                if(rgbs2[i] > rgbs1[i] ) {
+                    counter++;
+                }
+            }
+            if (counter / rgbs1.Count > 0.99)
+                return true;
+            return false;
+
+        }
+        private Bitmap TookScreenshot()
+        {
+            int centerX = this.ResolutionWidth / 2;
+            int centerY = this.ResolutionHeight / 2;
+
+            Bitmap screenshot = new Bitmap(10, 10, PixelFormat.Format32bppArgb);
+            Graphics gfx = Graphics.FromImage(screenshot);
+            gfx.CopyFromScreen(centerX - 5, centerY - 5, 0, 0, new Size(10, 10), CopyPixelOperation.SourceCopy);
+
+            return screenshot;
+
         }
 
         public Color GetColor(Point point)
