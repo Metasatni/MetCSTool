@@ -3,17 +3,15 @@ namespace MetCSTool.Tool
 {
     internal class BunnyHop
     {
-        public bool Enabled { get; set; }
-        public int LatencyInMs { get; set; }
+        private readonly KeyboardHook _hook;
+
+        public bool Enabled { get; set; } = false;
+        public int LatencyInMs { get; set; } = 2000;
         public Keys Key { get; set; }
 
-        KeyboardHook hook = new KeyboardHook();
-
-
-        public BunnyHop(Keys key)
+        public BunnyHop(KeyboardHook hook, Keys key)
         {
-            this.Enabled = false;
-            this.LatencyInMs = 2000;
+            _hook = hook;
             this.Key = key;
             //BackgroundWorker worker = new BackgroundWorker();
             //worker.DoWork += BunnyHopping;
@@ -32,7 +30,7 @@ namespace MetCSTool.Tool
         }
         private void BunnyHopping(object? sender, DoWorkEventArgs e)
         {
-            if (!Enabled) return;
+            if (!this.Enabled) return;
             BackgroundWorker bg = (BackgroundWorker)sender;
             Thread.Sleep(this.LatencyInMs);
             BunnyHopBunnyHopping();

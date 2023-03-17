@@ -11,53 +11,56 @@ namespace MetCSTool.Tool
 {
     internal class TriggerBot
     {
-        public bool Enabled { get; set; }
-        public int LatencyInMs { get; set; }
+        private readonly BackgroundWorker _worker;
+        private readonly KeyboardHook _hook;
+        private Color _color;
+
+        public bool Enabled { get; set; } = false;
+        public int LatencyInMs { get; set; } = 200;
         public int ResolutionWidth { get; set; }
         public int ResolutionHeight { get; set; }
-        public int TriggerPlace { get; set; }
+        public int TriggerPlace { get; set; } = 2;
         public Keys Key { get; set; }
-        private Color _color { get; set; }
 
-        BackgroundWorker worker = new BackgroundWorker();
-        
-        KeyboardHook hook = new KeyboardHook();
-
-        public TriggerBot(Keys key)
+        public TriggerBot(KeyboardHook hook, Keys key)
         {
-            this.Enabled = false;
-            this.LatencyInMs = 200;
+            _hook = hook;
             this.Key = key;
-            worker.DoWork += Triggering;
-            worker.WorkerSupportsCancellation = true;
-            this.TriggerPlace = 2;
-            hook.KeyDown += (sender, e) =>
+
+            _worker = new BackgroundWorker();
+            _worker.WorkerSupportsCancellation = true;
+            _worker.DoWork += Triggering;
+
+            _hook.KeyDown += (sender, e) =>
             {
-                if (e.KeyCode == this.Key)
+                if (e.KeyCode == this.Key && _worker.IsBusy == false)
                 {
-                    if (worker.IsBusy) return;
-                    worker.RunWorkerAsync();
+                    _worker.RunWorkerAsync();
                 }
             };
 
-            hook.KeyUp += (sender, e) => { if (e.KeyCode == this.Key) { worker.CancelAsync(); worker.Dispose(); } };
+            _hook.KeyUp += (sender, e) => {
+              if (e.KeyCode == this.Key) {
+                _worker.CancelAsync();
+                _worker.Dispose();
+              }
+            };
+
         }
 
         private void Triggering(object? sender, DoWorkEventArgs e)
         {
-            if (!Enabled) return;
-            BackgroundWorker bg = (BackgroundWorker)sender;
-            while (true)
+            if (this.Enabled == false) return;
+
+            while (_worker.CancellationPending == false)
             {
                 TriggerBotTriggering();
-                if (bg.CancellationPending)
-                {
-                    bg.Dispose();
-                    e.Cancel = true;
-                    return;
-                }
             }
+
+            e.Cancel = true;
+
         }
+
         private bool ColorCheck(Color color, Color color2)
         {
             if (Math.Abs((color.R - color2.R)) > 10) return true;
@@ -81,8 +84,8 @@ namespace MetCSTool.Tool
             {
                 _color = color;
                 MouseInput.MouseClick();
-                worker.CancelAsync();
-                worker.Dispose();
+                _worker.CancelAsync();
+                _worker.Dispose();
                 return;
             }
         }
@@ -101,8 +104,8 @@ namespace MetCSTool.Tool
 
         public Color GetColor()
         {
-            int centerX = this.ResolutionWidth / 2 + TriggerPlacePixel(TriggerPlace)[0];
-            int centerY = this.ResolutionHeight / 2 + TriggerPlacePixel(TriggerPlace)[1];
+            int centerX = this.ResolutionWidth / 2 + TriggerPlacePixel(this.TriggerPlace).Item1;
+            int centerY = this.ResolutionHeight / 2 + TriggerPlacePixel(this.TriggerPlace).Item2;
 
             Bitmap screenshot = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
             Graphics gfx = Graphics.FromImage(screenshot);
@@ -113,30 +116,21 @@ namespace MetCSTool.Tool
             gfx.Dispose();
             return color;
         }
-        private int[] TriggerPlacePixel(int place)
+
+        private (int, int) TriggerPlacePixel(int place)
         {
-            switch (place)
-            {
-                case 0:
-                    return new int[] { -1, -1 };
-                case 1:
-                    return new int[] { -1, 0 };
-                case 2:
-                    return new int[] { -1, 1 };
-                case 3:
-                    return new int[] { 0, -1 };
-                case 4:
-                    return new int[] { 0, 0 };
-                case 5:
-                    return new int[] { 0, 1 };
-                case 6:
-                    return new int[] { 1, -1 };
-                case 7:
-                    return new int[] { 1, 0 };
-                case 8:
-                    return new int[] { 1, 1 };
-            }
-            return new int[] { -1, 1 };
+            return place switch {
+                0 => (-1, -1),
+                1 => (-1, 0),
+                2 => (-1, 1),
+                3 => (0, -1),
+                4 => (0, 0),
+                5 => (0, 1),
+                6 => (1, -1),
+                7 => (1, 0),
+                8 => (1, 1),
+                _ => (-1, 1),
+            };
         }
 
     }
