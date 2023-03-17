@@ -13,7 +13,8 @@ namespace MetCSTool.Tool
     {
         private readonly BackgroundWorker _worker;
         private readonly KeyboardHook _hook;
-        private Color _color;
+        private Color _previousPixel;
+        private Bitmap _previousScreenshot;
 
         public bool Enabled { get; set; } = false;
         public int LatencyInMs { get; set; } = 200;
@@ -57,6 +58,8 @@ namespace MetCSTool.Tool
                 TriggerBotTriggering();
             }
 
+            _previousPixel = Color.Empty;
+            _previousScreenshot = null;
             e.Cancel = true;
 
         }
@@ -72,24 +75,27 @@ namespace MetCSTool.Tool
         public void TriggerBotTriggering()
         {
 
-            _color = GetColor();
-            Color color = GetColor();
-            Bitmap ss1 = TookScreenshot();
-            Bitmap ss2 = TookScreenshot();
+            if (_previousPixel.IsEmpty) _previousPixel = GetSinglePixel();
+            if (_previousScreenshot is null) _previousScreenshot = TakeScreenshot();
 
-            if (FlashCheck.Check(ss1, ss2)) { 
-                return;
-            }
-            if (ColorCheck(color, _color))
-            {
-                _color = color;
+            Color pixel = GetSinglePixel();
+            Bitmap screenshot = TakeScreenshot();
+
+            bool flashCheck = FlashCheck.Check(_previousScreenshot, screenshot);
+            bool colorCheck = ColorCheck(_previousPixel, pixel);
+
+            if (!flashCheck && colorCheck) {
                 MouseInput.MouseClick();
                 _worker.CancelAsync();
                 _worker.Dispose();
-                return;
             }
+
+            _previousPixel = pixel;
+            _previousScreenshot = screenshot;
+
         }
-        private Bitmap TookScreenshot()
+
+        private Bitmap TakeScreenshot()
         {
             int centerX = this.ResolutionWidth / 2;
             int centerY = this.ResolutionHeight / 2;
@@ -102,7 +108,7 @@ namespace MetCSTool.Tool
 
         }
 
-        public Color GetColor()
+        public Color GetSinglePixel()
         {
             int centerX = this.ResolutionWidth / 2 + TriggerPlacePixel(this.TriggerPlace).Item1;
             int centerY = this.ResolutionHeight / 2 + TriggerPlacePixel(this.TriggerPlace).Item2;
