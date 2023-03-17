@@ -75,11 +75,11 @@ namespace MetCSTool.Tool
         public void TriggerBotTriggering()
         {
 
-            if (_previousPixel.IsEmpty) _previousPixel = GetSinglePixel();
             if (_previousScreenshot is null) _previousScreenshot = TakeScreenshot();
+            if (_previousPixel.IsEmpty) _previousPixel = GetSinglePixel(_previousScreenshot);
 
-            Color pixel = GetSinglePixel();
             Bitmap screenshot = TakeScreenshot();
+            Color pixel = GetSinglePixel(screenshot);
 
             bool flashCheck = FlashCheck.Check(_previousScreenshot, screenshot);
             bool colorCheck = ColorCheck(_previousPixel, pixel);
@@ -108,18 +108,12 @@ namespace MetCSTool.Tool
 
         }
 
-        public Color GetSinglePixel()
+        public Color GetSinglePixel(Bitmap screenshot)
         {
-            int centerX = this.ResolutionWidth / 2 + TriggerPlacePixel(this.TriggerPlace).Item1;
-            int centerY = this.ResolutionHeight / 2 + TriggerPlacePixel(this.TriggerPlace).Item2;
-
-            Bitmap screenshot = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
-            Graphics gfx = Graphics.FromImage(screenshot);
-            gfx.CopyFromScreen(centerX, centerY, 0, 0, new Size(1, 1), CopyPixelOperation.SourceCopy);
+            int centerX = screenshot.Width / 2 + TriggerPlacePixel(this.TriggerPlace).Item1;
+            int centerY = screenshot.Height / 2 + TriggerPlacePixel(this.TriggerPlace).Item2;
 
             Color color = screenshot.GetPixel(0, 0);
-            screenshot.Dispose();
-            gfx.Dispose();
             return color;
         }
 
