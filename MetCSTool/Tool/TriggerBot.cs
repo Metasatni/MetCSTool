@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using MetCSTool.CSEvents;
+using MetCSTool.Inputs;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Metrics;
 using System.Drawing.Imaging;
@@ -17,11 +19,8 @@ namespace MetCSTool.Tool
         public Keys Key { get; set; }
         private Color _color { get; set; }
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern void mouse_event(long dwFlags, long dx, long dy, long cButtons, long dwExtraInfo);
-
-        public const int LEFTDOWN = 0x02;
-        public const int LEFTUP = 0x04;
+        BackgroundWorker worker = new BackgroundWorker();
+        
         KeyboardHook hook = new KeyboardHook();
 
         public TriggerBot(Keys key)
@@ -29,7 +28,6 @@ namespace MetCSTool.Tool
             this.Enabled = false;
             this.LatencyInMs = 200;
             this.Key = key;
-            BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += Triggering;
             worker.WorkerSupportsCancellation = true;
             this.TriggerPlace = 2;
@@ -42,7 +40,7 @@ namespace MetCSTool.Tool
                 }
             };
 
-            hook.KeyUp += (sender, e) => { if (e.KeyCode == this.Key) { worker.CancelAsync(); } };
+            hook.KeyUp += (sender, e) => { if (e.KeyCode == this.Key) { worker.CancelAsync(); worker.Dispose(); } };
         }
 
         private void Triggering(object? sender, DoWorkEventArgs e)
@@ -70,68 +68,23 @@ namespace MetCSTool.Tool
 
         public void TriggerBotTriggering()
         {
-            _color = GetColor(GetPoint());
-            Thread.Sleep(3);
-            Color color = GetColor(GetPoint());
+
+            _color = GetColor();
+            Color color = GetColor();
             Bitmap ss1 = TookScreenshot();
-            Thread.Sleep(3);
             Bitmap ss2 = TookScreenshot();
 
-            if (FlashCheck(ss1, ss2)) { 
+            if (FlashCheck.Check(ss1, ss2)) { 
                 return;
             }
             if (ColorCheck(color, _color))
             {
-                Thread.Sleep(LatencyInMs);
                 _color = color;
-                PerformLeftClick();
-                Thread.Sleep(500);
+                MouseInput.MouseClick();
+                worker.CancelAsync();
+                worker.Dispose();
+                return;
             }
-        }
-
-        public Point GetPoint()
-        {
-            Point lpPoint;
-            lpPoint = new Point();
-            lpPoint.X = ResolutionWidth / 2;
-            lpPoint.Y = ResolutionHeight / 2;
-            return lpPoint;
-        }
-        private bool FlashCheck(Bitmap screenshot, Bitmap screenshot2)
-        {
-            List<int> rgbs1 = new List<int>();
-            List<int> rgbs2 = new List<int>();
-            int counter = 0;
-            
-
-           for(int i = 0; i < screenshot.Width; i++)
-            {
-                for (int j = 0; j < screenshot.Height; j++)
-                {
-                    rgbs1.Add(screenshot.GetPixel(i, j).R);
-                    rgbs1.Add(screenshot.GetPixel(i, j).G);
-                    rgbs1.Add(screenshot.GetPixel(i, j).B);
-                }
-            } 
-            for(int i = 0; i < screenshot2.Width; i++)
-            {
-                for (int j = 0; j < screenshot2.Height; j++)
-                {
-                    rgbs2.Add(screenshot2.GetPixel(i, j).R);
-                    rgbs2.Add(screenshot2.GetPixel(i, j).G);
-                    rgbs2.Add(screenshot2.GetPixel(i, j).B);
-                }
-            } 
-            for(int i = 0; i < rgbs1.Count; i++)
-            {
-                if(rgbs2[i] > rgbs1[i] ) {
-                    counter++;
-                }
-            }
-            if (counter / rgbs1.Count > 0.99)
-                return true;
-            return false;
-
         }
         private Bitmap TookScreenshot()
         {
@@ -146,7 +99,7 @@ namespace MetCSTool.Tool
 
         }
 
-        public Color GetColor(Point point)
+        public Color GetColor()
         {
             int centerX = this.ResolutionWidth / 2 + TriggerPlacePixel(TriggerPlace)[0];
             int centerY = this.ResolutionHeight / 2 + TriggerPlacePixel(TriggerPlace)[1];
@@ -159,11 +112,6 @@ namespace MetCSTool.Tool
             screenshot.Dispose();
             gfx.Dispose();
             return color;
-        }
-        private void PerformLeftClick()
-        {
-            mouse_event(LEFTDOWN, 0, 0, 0, 0);
-            mouse_event(LEFTUP, 0, 0, 0, 0);
         }
         private int[] TriggerPlacePixel(int place)
         {

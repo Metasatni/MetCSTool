@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -57,6 +58,7 @@ namespace MetCSTool.Tool
         }
         public void Spinning(object? sender, DoWorkEventArgs e)
         {
+            Debug.WriteLine("spinning");
             if (!Enabled) return;
             BackgroundWorker bg = (BackgroundWorker)sender;
             while (true)
