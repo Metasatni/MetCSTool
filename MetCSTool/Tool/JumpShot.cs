@@ -4,9 +4,11 @@ namespace MetCSTool.Tool
 {
     internal class JumpShot
     {
-        public bool Enabled { get; set; }
-        public bool InEnabled { get; set; }
-        public int LatencyInMs { get; set; }
+        private readonly KeyboardHook _hook;
+        private const int JUMPSHOT_LATENCY_MS = 336;
+
+        public bool Enabled { get; set; } = false;
+        public bool InEnabled { get; set; } = true;
         public Keys ToggleKey { get; set; }
         public Keys BindKey { get; set; }
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
@@ -14,33 +16,32 @@ namespace MetCSTool.Tool
         public const int LEFTDOWN = 0x02;
         public const int LEFTUP = 0x04;
 
-        KeyboardHook hook = new KeyboardHook();
-
-
-        public JumpShot(Keys togglekey, Keys bindkey)
+        public JumpShot(KeyboardHook hook, Keys togglekey, Keys bindkey)
         {
-            this.Enabled = false;
-            this.InEnabled = true;
-            this.LatencyInMs = 336;
+            _hook = hook;
             this.ToggleKey = togglekey;
             this.BindKey = bindkey;
-            hook.KeyDown += (sender, e) =>
+
+            _hook.KeyDown += (sender, e) =>
             {
-                if (e.KeyCode == this.BindKey) { JumpShotActivate(); } 
+                if (e.KeyCode == this.BindKey) JumpShotActivate();
             };
         }
+
         private async void JumpShotActivate()
         {
             if(!this.InEnabled) return;
             if(!this.Enabled) return;
-            await Task.Run( () => Thread.Sleep(LatencyInMs));
+            await Task.Run( () => Thread.Sleep(JUMPSHOT_LATENCY_MS));
             PerformLeftClick();
 
         }
+
         private void PerformLeftClick()
         {
             mouse_event(LEFTDOWN, 0, 0, 0, 0);
             mouse_event(LEFTUP, 0, 0, 0, 0);
         }
+
     }
 }

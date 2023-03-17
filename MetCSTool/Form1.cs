@@ -5,23 +5,28 @@ namespace MetCSTool
 {
     public partial class MetCSTool : Form
     {
-        KeyboardHook hook = new KeyboardHook();
-        TriggerBot TriggerBot = new TriggerBot(Keys.F);
-        BunnyHop BunnyHop = new BunnyHop(Keys.Space);
-        JumpShot JumpShot = new JumpShot(Keys.V, Keys.Space);
-        FakeSpinBot FakeSpinBot = new FakeSpinBot();
+        private readonly KeyboardHook _hook;
+        private readonly TriggerBot _triggerBot;
+        private readonly BunnyHop _bunnyHop;
+        private readonly JumpShot _jumpShot;
+        private readonly FakeSpinBot _fakeSpinBot;
+
         public MetCSTool()
         {
+            _hook = new KeyboardHook();
+            _triggerBot = new TriggerBot(_hook, Keys.F);
+            _bunnyHop = new BunnyHop(_hook, Keys.Space);
+            _jumpShot = new JumpShot(_hook, Keys.V, Keys.Space);
+            _fakeSpinBot = new FakeSpinBot(_hook);
+
             InitializeComponent();
             this.ResolutionWidth.Value = Screen.PrimaryScreen.Bounds.Width;
             this.ResolutionHeight.Value = Screen.PrimaryScreen.Bounds.Height;
-            AddResolutions();
+            CreateResolutions();
 
-            KeyboardHook hook = new KeyboardHook();
-
-            hook.KeyDown += (sender, e) =>
+            _hook.KeyDown += (sender, e) =>
             {
-                if (e.KeyCode == this.JumpShot.ToggleKey)
+                if (e.KeyCode == _jumpShot.ToggleKey)
                 {
                     if (!this.JumpShotCheckBox.Checked) { return; }
                     if (JumpShotInEnabled.Checked) { JumpShotInEnabled.Checked = false; }
@@ -30,14 +35,13 @@ namespace MetCSTool
             };
         }
 
-        private void MainLoop_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-        }
+        private void MainLoop_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e) { }
+
         private void TriggerBotCheckbox_CheckedChanged(object sender, EventArgs e)
         {
 
             CheckBox checkBox = sender as CheckBox;
-            if (checkBox.Checked) { this.TriggerBot.Enabled = true; } else { this.TriggerBot.Enabled = false; }
+            if (checkBox.Checked) { this._triggerBot.Enabled = true; } else { this._triggerBot.Enabled = false; }
         }
 
         private void TriggerBotKeyPick(object sender, KeyEventArgs e)
@@ -46,7 +50,7 @@ namespace MetCSTool
             if (button == null) { return; }
             string key = e.KeyCode.ToString();
             button.Text = key;
-            this.TriggerBot.Key = e.KeyCode;
+            this._triggerBot.Key = e.KeyCode;
         }
 
         private void StartButton_Click(object sender, EventArgs e)
@@ -67,21 +71,21 @@ namespace MetCSTool
         private void TriggerLatency_ValueChanged(object sender, EventArgs e)
         {
             NumericUpDown numericUpDown = sender as NumericUpDown;
-            this.TriggerBot.LatencyInMs = Convert.ToInt32(numericUpDown.Value);
+            this._triggerBot.LatencyInMs = Convert.ToInt32(numericUpDown.Value);
         }
 
         private void ResolutionWidth_ValueChanged(object sender, EventArgs e)
         {
             NumericUpDown numericUpDown = (NumericUpDown)sender;
-            this.TriggerBot.ResolutionWidth = Convert.ToInt32(numericUpDown.Value);
+            _triggerBot.ResolutionWidth = Convert.ToInt32(numericUpDown.Value);
         }
 
         private void ResolutionHeight_ValueChanged(object sender, EventArgs e)
         {
             NumericUpDown numericUpDown = (NumericUpDown)sender;
-            this.TriggerBot.ResolutionHeight = Convert.ToInt32(numericUpDown.Value);
+            this._triggerBot.ResolutionHeight = Convert.ToInt32(numericUpDown.Value);
         }
-        private void AddResolutions()
+        private void CreateResolutions()
         {
             ResolutionList.Items.Add("4:3");
             ResolutionList.Items.Add("640x480");
@@ -127,24 +131,23 @@ namespace MetCSTool
 
         private void BunnyHopCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox checkBox = sender as CheckBox;
-            if (checkBox.Checked) { this.BunnyHop.Enabled = true; } else { this.BunnyHop.Enabled = false; }
+            var checkBox = (CheckBox)sender;
+            _bunnyHop.Enabled = checkBox.Checked;
         }
 
         private void BunnyHopPick(object sender, KeyEventArgs e)
         {
-            Button button = sender as Button;
-            if (button == null) { return; }
+            if (sender is not Button button) return;
             string key = e.KeyCode.ToString();
             button.Text = key;
-            this.BunnyHop.Key = e.KeyCode;
+            this._bunnyHop.Key = e.KeyCode;
         }
 
         private void JumpShotCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox checkBox = sender as CheckBox;
-            if (checkBox.Checked) { this.JumpShot.Enabled = true; this.JumpShotInEnabled.Enabled = true; }
-            else { this.JumpShot.Enabled = false; this.JumpShotInEnabled.Enabled = false; }
+            if (checkBox.Checked) { this._jumpShot.Enabled = true; this.JumpShotInEnabled.Enabled = true; }
+            else { this._jumpShot.Enabled = false; this.JumpShotInEnabled.Enabled = false; }
         }
 
         private void JumpBindPick(object sender, KeyEventArgs e)
@@ -153,38 +156,37 @@ namespace MetCSTool
             if (button == null) { return; }
             string key = e.KeyCode.ToString();
             button.Text = key;
-            this.JumpShot.BindKey = e.KeyCode;
+            this._jumpShot.BindKey = e.KeyCode;
 
         }
 
         private void JumpTogglePick(object sender, KeyEventArgs e)
         {
-            Button button = sender as Button;
-            if (button == null) { return; }
+            if (sender is not Button button) return;
             string key = e.KeyCode.ToString();
             button.Text = key;
-            this.JumpShot.ToggleKey = e.KeyCode;
+            this._jumpShot.ToggleKey = e.KeyCode;
 
         }
 
         private void JumpShotInEnabled_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox checkBox = sender as CheckBox;
-            if (checkBox.Checked) { this.JumpShot.InEnabled = true; }
-            else { this.JumpShot.InEnabled = false; }
+            if (checkBox.Checked) { this._jumpShot.InEnabled = true; }
+            else { this._jumpShot.InEnabled = false; }
         }
 
         private void TriggerPlace_CheckedChanged(object sender, EventArgs e)
         {
             RadioButton checkBox = sender as RadioButton;
             if (!checkBox.Checked) return;
-            TriggerBot.TriggerPlace = checkBox.Name[checkBox.Name.Length - 1] - 48;
+            _triggerBot.TriggerPlace = checkBox.Name[checkBox.Name.Length - 1] - 48;
         }
 
         private void FakeSpinBotCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox checkBox = sender as CheckBox;
-            if (checkBox.Checked) { this.FakeSpinBot.Enabled = true; } else { this.FakeSpinBot.Enabled = false; }
+            if (checkBox.Checked) { this._fakeSpinBot.Enabled = true; } else { this._fakeSpinBot.Enabled = false; }
         }
     }
 }
