@@ -10,6 +10,7 @@ namespace MetCSTool
         private readonly BunnyHop _bunnyHop;
         private readonly JumpShot _jumpShot;
         private readonly FakeSpinBot _fakeSpinBot;
+        private readonly AimBot _aimBot;
 
         public MetCSTool()
         {
@@ -17,7 +18,8 @@ namespace MetCSTool
             _triggerBot = new TriggerBot(_hook, Keys.F);
             _bunnyHop = new BunnyHop(_hook, Keys.Space);
             _jumpShot = new JumpShot(_hook, Keys.V, Keys.Space);
-            _fakeSpinBot = new FakeSpinBot(_hook);
+            _fakeSpinBot = new FakeSpinBot(_hook, Keys.Z);
+            _aimBot = new AimBot(_hook, Keys.M);
 
             InitializeComponent();
             this.ResolutionWidth.Value = Screen.PrimaryScreen.Bounds.Width;
@@ -58,16 +60,6 @@ namespace MetCSTool
             MainLoop.RunWorkerAsync();
         }
 
-        private void TriggerBotKey_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void TriggerLatency_ValueChanged(object sender, EventArgs e)
         {
             NumericUpDown numericUpDown = sender as NumericUpDown;
@@ -78,12 +70,14 @@ namespace MetCSTool
         {
             NumericUpDown numericUpDown = (NumericUpDown)sender;
             _triggerBot.ResolutionWidth = Convert.ToInt32(numericUpDown.Value);
+            _aimBot.ResolutionWidth = Convert.ToInt32(numericUpDown.Value);
         }
 
         private void ResolutionHeight_ValueChanged(object sender, EventArgs e)
         {
             NumericUpDown numericUpDown = (NumericUpDown)sender;
             this._triggerBot.ResolutionHeight = Convert.ToInt32(numericUpDown.Value);
+            this._aimBot.ResolutionHeight = Convert.ToInt32(numericUpDown.Value);
         }
         private void CreateResolutions()
         {
@@ -187,6 +181,39 @@ namespace MetCSTool
         {
             CheckBox checkBox = sender as CheckBox;
             if (checkBox.Checked) { this._fakeSpinBot.Enabled = true; } else { this._fakeSpinBot.Enabled = false; }
+        }
+
+        private void AimLatency_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = sender as NumericUpDown;
+            this._aimBot.LatencyInMs = Convert.ToInt32(numericUpDown.Value);
+        }
+
+        private void AimBotCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox checkBox = sender as CheckBox;
+            if (checkBox.Checked) { this._aimBot.Enabled = true; } else { this._aimBot.Enabled = false; }
+
+        }
+
+        private void AimBotKeyPick(object sender, KeyEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button == null) { return; }
+            string key = e.KeyCode.ToString();
+            button.Text = key;
+            this._aimBot.Key = e.KeyCode;
+
+        }
+
+        private void FakeSpinBotKeyPick(object sender, KeyEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button == null) { return; }
+            string key = e.KeyCode.ToString();
+            button.Text = key;
+            this._fakeSpinBot.Key = e.KeyCode;
+
         }
     }
 }

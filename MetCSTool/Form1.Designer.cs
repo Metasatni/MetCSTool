@@ -65,7 +65,13 @@
             label3 = new Label();
             JumpShotKey = new Button();
             SpinBotPage = new TabPage();
+            button1 = new Button();
             FakeSpinBotCheckBox = new CheckBox();
+            AimBotPage = new TabPage();
+            AimBotKey = new Button();
+            AimBotCheckBox = new CheckBox();
+            label7 = new Label();
+            AimBotLatency = new NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)TriggerLatency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ResolutionWidth).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ResolutionHeight).BeginInit();
@@ -75,6 +81,8 @@
             BunnyHopPage.SuspendLayout();
             JumpShotPage.SuspendLayout();
             SpinBotPage.SuspendLayout();
+            AimBotPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)AimBotLatency).BeginInit();
             SuspendLayout();
             // 
             // TriggerBotCheckbox
@@ -96,7 +104,6 @@
             TriggerBotKey.TabIndex = 2;
             TriggerBotKey.Text = "F";
             TriggerBotKey.UseVisualStyleBackColor = true;
-            TriggerBotKey.Click += TriggerBotKey_Click;
             TriggerBotKey.KeyDown += TriggerBotKeyPick;
             // 
             // MainLoop
@@ -121,7 +128,6 @@
             label1.Size = new Size(59, 20);
             label1.TabIndex = 4;
             label1.Text = "Latency";
-            label1.Click += label1_Click;
             // 
             // TriggerLatency
             // 
@@ -216,6 +222,7 @@
             MainTabs.Controls.Add(BunnyHopPage);
             MainTabs.Controls.Add(JumpShotPage);
             MainTabs.Controls.Add(SpinBotPage);
+            MainTabs.Controls.Add(AimBotPage);
             MainTabs.Location = new Point(12, 77);
             MainTabs.Name = "MainTabs";
             MainTabs.SelectedIndex = 0;
@@ -468,6 +475,7 @@
             // 
             // SpinBotPage
             // 
+            SpinBotPage.Controls.Add(button1);
             SpinBotPage.Controls.Add(FakeSpinBotCheckBox);
             SpinBotPage.Location = new Point(4, 29);
             SpinBotPage.Name = "SpinBotPage";
@@ -475,6 +483,16 @@
             SpinBotPage.TabIndex = 3;
             SpinBotPage.Text = "Fake SpinBot";
             SpinBotPage.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(121, 12);
+            button1.Name = "button1";
+            button1.Size = new Size(94, 29);
+            button1.TabIndex = 3;
+            button1.Text = "F";
+            button1.UseVisualStyleBackColor = true;
+            button1.KeyDown += FakeSpinBotKeyPick;
             // 
             // FakeSpinBotCheckBox
             // 
@@ -486,6 +504,59 @@
             FakeSpinBotCheckBox.Text = "Enabled";
             FakeSpinBotCheckBox.UseVisualStyleBackColor = true;
             FakeSpinBotCheckBox.CheckedChanged += FakeSpinBotCheckBox_CheckedChanged;
+            // 
+            // AimBotPage
+            // 
+            AimBotPage.Controls.Add(AimBotKey);
+            AimBotPage.Controls.Add(AimBotCheckBox);
+            AimBotPage.Controls.Add(label7);
+            AimBotPage.Controls.Add(AimBotLatency);
+            AimBotPage.Location = new Point(4, 29);
+            AimBotPage.Name = "AimBotPage";
+            AimBotPage.Size = new Size(763, 257);
+            AimBotPage.TabIndex = 4;
+            AimBotPage.Text = "AimBot";
+            AimBotPage.UseVisualStyleBackColor = true;
+            // 
+            // AimBotKey
+            // 
+            AimBotKey.Location = new Point(274, 15);
+            AimBotKey.Name = "AimBotKey";
+            AimBotKey.Size = new Size(94, 29);
+            AimBotKey.TabIndex = 7;
+            AimBotKey.Text = "M";
+            AimBotKey.UseVisualStyleBackColor = true;
+            AimBotKey.KeyDown += AimBotKeyPick;
+            // 
+            // AimBotCheckBox
+            // 
+            AimBotCheckBox.AutoSize = true;
+            AimBotCheckBox.Location = new Point(30, 18);
+            AimBotCheckBox.Name = "AimBotCheckBox";
+            AimBotCheckBox.Size = new Size(81, 24);
+            AimBotCheckBox.TabIndex = 6;
+            AimBotCheckBox.Text = "AimBot";
+            AimBotCheckBox.UseVisualStyleBackColor = true;
+            AimBotCheckBox.CheckedChanged += AimBotCheckbox_CheckedChanged;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(141, 18);
+            label7.Name = "label7";
+            label7.Size = new Size(59, 20);
+            label7.TabIndex = 8;
+            label7.Text = "Latency";
+            // 
+            // AimBotLatency
+            // 
+            AimBotLatency.Location = new Point(206, 14);
+            AimBotLatency.Maximum = new decimal(new int[] { 2000, 0, 0, 0 });
+            AimBotLatency.Name = "AimBotLatency";
+            AimBotLatency.Size = new Size(62, 27);
+            AimBotLatency.TabIndex = 9;
+            AimBotLatency.Value = new decimal(new int[] { 200, 0, 0, 0 });
+            AimBotLatency.ValueChanged += AimLatency_ValueChanged;
             // 
             // MetCSTool
             // 
@@ -515,6 +586,9 @@
             JumpShotPage.PerformLayout();
             SpinBotPage.ResumeLayout(false);
             SpinBotPage.PerformLayout();
+            AimBotPage.ResumeLayout(false);
+            AimBotPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)AimBotLatency).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -559,5 +633,11 @@
         private Label label5;
         private TabPage SpinBotPage;
         private CheckBox FakeSpinBotCheckBox;
+        private TabPage AimBotPage;
+        private Button AimBotKey;
+        private CheckBox AimBotCheckBox;
+        private Label label7;
+        private NumericUpDown AimBotLatency;
+        private Button button1;
     }
 }

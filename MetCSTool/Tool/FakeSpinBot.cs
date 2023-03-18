@@ -17,14 +17,15 @@ namespace MetCSTool.Tool
         private readonly BackgroundWorker _worker;
 
         public bool Enabled { get; set; } = false;
-        public Keys Key { get; set; } = Keys.Z;
+        public Keys Key { get; set; }
 
         [DllImport("user32.dll")]
         static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
 
-        public FakeSpinBot(KeyboardHook hook)
+        public FakeSpinBot(KeyboardHook hook,Keys key)
         {
             _hook = hook;
+            this.Key = key;
 
             _worker = new BackgroundWorker();
             _worker.DoWork += Spinning;

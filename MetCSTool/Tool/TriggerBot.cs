@@ -1,5 +1,6 @@
 ﻿using MetCSTool.CSEvents;
 using MetCSTool.Inputs;
+using MetCSTool.Others;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Metrics;
@@ -75,16 +76,20 @@ namespace MetCSTool.Tool
         public void TriggerBotTriggering()
         {
 
-            if (_previousScreenshot is null) _previousScreenshot = TakeScreenshot();
-            if (_previousPixel.IsEmpty) _previousPixel = GetSinglePixel(_previousScreenshot);
+            if (_previousScreenshot is null) _previousScreenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth, this.ResolutionHeight,10,10);
+            if (_previousPixel.IsEmpty) _previousPixel = 
+                ScreenFunc.GetSinglePixel(_previousScreenshot,TriggerPlacePixel(TriggerPlace).Item1,TriggerPlacePixel(TriggerPlace).Item2);
 
-            Bitmap screenshot = TakeScreenshot();
-            Color pixel = GetSinglePixel(screenshot);
+            Bitmap screenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth, this.ResolutionHeight, 10, 10);
+
+            Color pixel = 
+                ScreenFunc.GetSinglePixel(_previousScreenshot,TriggerPlacePixel(TriggerPlace).Item1,TriggerPlacePixel(TriggerPlace).Item2);
 
             bool flashCheck = FlashCheck.Check(_previousScreenshot, screenshot);
             bool colorCheck = ColorCheck(_previousPixel, pixel);
 
             if (!flashCheck && colorCheck) {
+                Thread.Sleep(LatencyInMs);
                 MouseInput.MouseClick();
                 _worker.CancelAsync();
                 _worker.Dispose();
@@ -94,29 +99,6 @@ namespace MetCSTool.Tool
             _previousScreenshot = screenshot;
 
         }
-
-        private Bitmap TakeScreenshot()
-        {
-            int centerX = this.ResolutionWidth / 2;
-            int centerY = this.ResolutionHeight / 2;
-
-            Bitmap screenshot = new Bitmap(10, 10, PixelFormat.Format32bppArgb);
-            Graphics gfx = Graphics.FromImage(screenshot);
-            gfx.CopyFromScreen(centerX - 5, centerY - 5, 0, 0, new Size(10, 10), CopyPixelOperation.SourceCopy);
-
-            return screenshot;
-
-        }
-
-        public Color GetSinglePixel(Bitmap screenshot)
-        {
-            int centerX = screenshot.Width / 2 + TriggerPlacePixel(this.TriggerPlace).Item1;
-            int centerY = screenshot.Height / 2 + TriggerPlacePixel(this.TriggerPlace).Item2;
-
-            Color color = screenshot.GetPixel(0, 0);
-            return color;
-        }
-
         private (int, int) TriggerPlacePixel(int place)
         {
             return place switch {
@@ -132,6 +114,5 @@ namespace MetCSTool.Tool
                 _ => (-1, 1),
             };
         }
-
     }
 }
