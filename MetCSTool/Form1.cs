@@ -15,7 +15,7 @@ namespace MetCSTool
         public MetCSTool()
         {
             _hook = new KeyboardHook();
-            _triggerBot = new TriggerBot(_hook, Keys.F);
+            _triggerBot = new TriggerBot(_hook, Keys.C);
             _bunnyHop = new BunnyHop(_hook, Keys.Space);
             _jumpShot = new JumpShot(_hook, Keys.V, Keys.Space);
             _fakeSpinBot = new FakeSpinBot(_hook, Keys.Z);

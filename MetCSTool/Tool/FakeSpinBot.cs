@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MetCSTool.Inputs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,16 +12,12 @@ namespace MetCSTool.Tool
 {
     internal class FakeSpinBot
     {
-        private const int MOUSEEVENTF_MOVE = 0x0001;
-        private const int MOUSEEVENTF_ABSOLUTE = 0x8000;
         private readonly KeyboardHook _hook;
         private readonly BackgroundWorker _worker;
 
         public bool Enabled { get; set; } = false;
         public Keys Key { get; set; }
 
-        [DllImport("user32.dll")]
-        static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
 
         public FakeSpinBot(KeyboardHook hook,Keys key)
         {
@@ -49,9 +46,9 @@ namespace MetCSTool.Tool
         {
             for (int i = 0; i < 60; i += 1)
             {
-                mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, 1000, 0, 0, 0);
+                MouseInput.MouseMove(1000, 0);
             }
-            mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, -60000, 0, 0, 0);
+            MouseInput.MouseMove(-60000, 0);
             Thread.Sleep(20);
         }
 

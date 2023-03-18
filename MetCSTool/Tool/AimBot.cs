@@ -1,4 +1,5 @@
 ﻿using MetCSTool.CSEvents;
+using MetCSTool.Inputs;
 using MetCSTool.Others;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -66,18 +68,27 @@ namespace MetCSTool.Tool
         public void AimBotAiming()
         {
 
-            if (_previousScreenshot is null) _previousScreenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth,this.ResolutionHeight,10,10);
+            if (_previousScreenshot is null) _previousScreenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth,this.ResolutionHeight,100,20);
 
-            Bitmap screenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth,this.ResolutionHeight,10,10);
+            Bitmap screenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth,this.ResolutionHeight,100,20);
 
-            bool characterCheck = CharacterCheck.Check(_previousScreenshot, screenshot);
+            bool characterCheck = CharacterCheck.Check(_previousScreenshot, screenshot, out Direction direction);
 
 
             if (characterCheck)
             {
-                Debug.WriteLine("jest character");
-                _worker.CancelAsync();
-                _worker.Dispose();
+                if(direction == Direction.Left)
+                {
+                    MouseInput.MouseMove(-30,0);
+                }
+                if(direction == Direction.Right)
+                {
+                    MouseInput.MouseMove(30, 0);
+                }
+                if(direction == Direction.Middle)
+                {
+                    MouseInput.MouseClick();
+                }
             }
 
             _previousScreenshot = screenshot;

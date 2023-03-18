@@ -102,7 +102,7 @@
             TriggerBotKey.Name = "TriggerBotKey";
             TriggerBotKey.Size = new Size(94, 29);
             TriggerBotKey.TabIndex = 2;
-            TriggerBotKey.Text = "F";
+            TriggerBotKey.Text = "C";
             TriggerBotKey.UseVisualStyleBackColor = true;
             TriggerBotKey.KeyDown += TriggerBotKeyPick;
             // 
@@ -490,7 +490,7 @@
             button1.Name = "button1";
             button1.Size = new Size(94, 29);
             button1.TabIndex = 3;
-            button1.Text = "F";
+            button1.Text = "Z";
             button1.UseVisualStyleBackColor = true;
             button1.KeyDown += FakeSpinBotKeyPick;
             // 
