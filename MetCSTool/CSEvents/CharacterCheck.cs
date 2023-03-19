@@ -1,10 +1,7 @@
-﻿using MetCSTool.Inputs;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.PerformanceData;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AForge.Imaging.Filters;
+using AForge.Imaging;
+using System.Runtime.Intrinsics.X86;
+using System.Drawing.Imaging;
 
 namespace MetCSTool.CSEvents
 {
@@ -17,75 +14,82 @@ namespace MetCSTool.CSEvents
     }
     internal class CharacterCheck
     {
-        public static bool Check(Bitmap ss1, Bitmap ss2, out Direction direction)
+        public static bool Check(Bitmap ss, out Direction direction)
         {
-            int[,,] rgbs1= GetRbgValues(ss1);
-            int[,,] rgbs2 = GetRbgValues(ss2);
-
-            return IsArraySimilar(rgbs1,rgbs2, out direction);
-
-        }
-        private static bool IsArraySimilar(int[,,] arr1, int[,,] arr2, out Direction direction)
-        {
+            int[,,] rgbs = GetRbgValues(ss);
             direction = Direction.None;
-            int similarcounter = 0;
-            int length = arr1.Length;
-            int leftc = 0;
-            int rightc = 0;
-            int middle = 0;
-
-            for (int i = 0; i < arr1.GetLength(0); i++)
+            List<Bitmap> patternImage = new List<Bitmap>();
+            for (int i = 1; i <= 6; i++)
             {
-                for (int j = 0; j < arr1.GetLength(1); j++)
+                patternImage.Add(new Bitmap("model_ct" + i + ".png"));
+                patternImage[i-1] = ConvertToFormat(patternImage[i-1], PixelFormat.Format24bppRgb);
+            }
+            ss = ConvertToFormat(ss, PixelFormat.Format24bppRgb);
+            for (int i = 0; i < patternImage.Count; i++)
+            {
+
+                TemplateMatch[] matches = new ExhaustiveTemplateMatching().ProcessImage(
+                new ResizeBilinear(ss.Width, ss.Height).Apply(ss),
+                new ResizeBilinear(patternImage[i].Width, patternImage[i].Height).Apply(patternImage[i])
+                );
+                int indexMaxSim = -1;
+                float maxSim = 0;
+                int indCounter = 0;
+                if (matches.Length > 0)
                 {
-                    for (int k = 0; k < arr1.GetLength(2); k++)
+                    foreach (var item in matches)
                     {
-                        if (IsSimilar(arr1[i,j,k], arr2[i,j,k])) similarcounter++;
-                        else
+                        if(item.Similarity > 0.9)
                         {
-                            if (j < arr1.GetLength(1) / 2) leftc++;
-                            else if (j > arr1.GetLength(1) / 2) rightc++;
+                            if(item.Similarity > maxSim)
+                            {
+                                indexMaxSim = indCounter;
+                                maxSim = item.Similarity;
+                            }
+                            indCounter++;
                         }
                     }
+                    if (indexMaxSim == -1) return false;
+                    var bestCharacter = matches[indexMaxSim];
+                    Rectangle character = bestCharacter.Rectangle;
+                    int x = character.X;
+                    int y = character.Y;
+                    direction = GetDirection(rgbs, x, y);
+                    return true;
                 }
-            }
-            bool issimilar = similarcounter / length > 0.85;
-            int halfY = arr2.GetLength(0) / 2 + 1;
-            int halfX = arr2.GetLength(1) / 2 + 1;
-            if (!issimilar) {
-                if (!IsSimilar(arr2[halfY, halfX, 0], arr1[halfY, halfX, 0])){
-                    if (!IsSimilar(arr2[halfY, halfX, 1], arr1[halfY, halfX, 1]))
-                    {
-                        if (!IsSimilar(arr2[halfY, halfX, 2], arr1[halfY, halfX, 2]))
-                        {
-                            direction = Direction.Middle;
-                            return true;
-                        }
-                    }
-                }
-                if(rightc > leftc && leftc > middle) direction = Direction.Right;
-                if(leftc > rightc && leftc > middle ) direction = Direction.Left;
-                return true;
             }
             return false;
         }
 
-        private static bool IsSimilar(int color1, int color2)
+        private static Bitmap ConvertToFormat(Bitmap image, PixelFormat format)
         {
-            if (Math.Abs(color1 - color2) < 10) return true;
-            return false;
+            Bitmap copy = new Bitmap(image.Width, image.Height, format);
+            using (Graphics gr = Graphics.FromImage(copy))
+            {
+                gr.DrawImage(image, new Rectangle(0, 0, copy.Width, copy.Height));
+            }
+            return copy;
         }
 
-        private static int[,,] GetRbgValues(Bitmap screenshot) {
+        private static Direction GetDirection(int[,,] rgbs, int x, int y)
+        {
+            int halfX = rgbs.GetLength(1) / 2 + 1;
+            if (x - halfX < -8 ) { return Direction.Left; }
+            if (x - halfX > 8) { return Direction.Right; }
+            else  return Direction.Middle; 
+        }
 
-            int[,,] rgbs = new int[screenshot.Height, screenshot.Width,3]; 
+        private static int[,,] GetRbgValues(Bitmap screenshot)
+        {
 
-            for(int i = 0; i < screenshot.Width; i++)
+            int[,,] rgbs = new int[screenshot.Height, screenshot.Width, 3];
+
+            for (int i = 0; i < screenshot.Width; i++)
             {
                 for (int j = 0; j < screenshot.Height; j++)
                 {
                     var pixel = screenshot.GetPixel(i, j);
-                    if(pixel.R < 70 && pixel.G < 70 && pixel.B < 70)
+                    if (pixel.R < 70 && pixel.G < 70 && pixel.B < 70)
                     {
                         rgbs[j, i, 0] = pixel.R;
                         rgbs[j, i, 1] = pixel.G;
