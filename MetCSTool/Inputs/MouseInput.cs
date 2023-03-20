@@ -28,17 +28,34 @@ namespace MetCSTool.Inputs
         }
         public static void FluencyMouseMoveRight(int right)
         {
-            for (int i = 0; i < right/10; i++)
+            for (int i = 0; i < right/20; i++)
             {
-                mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, 10, 0, 0, 0);
+                mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, 20, 0, 0, 0);
                 Thread.Sleep(1);
             }
         }
+        public static void FluencyMouseMoveTop(int top)
+        {
+            for (int i = 0; i < top/20; i++)
+            {
+                mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, 0, -20, 0, 0);
+                Thread.Sleep(1);
+            }
+        }
+        public static void FluencyMouseMoveDown(int down)
+        {
+            for (int i = 0; i < down/20; i++)
+            {
+                mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, 0, 20, 0, 0);
+                Thread.Sleep(1);
+            }
+        }
+
         public static void FluencyMouseMoveLeft(int left)
         {
-            for (int i = 0; i < left/10 ; i++)
+            for (int i = 0; i < left/20 ; i++)
             {
-                mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, -10, 0, 0, 0);
+                mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, -20, 0, 0, 0);
                 Thread.Sleep(1);
             }
         }

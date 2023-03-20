@@ -14,10 +14,11 @@ namespace MetCSTool.CSEvents
     }
     internal class CharacterCheck
     {
-        public static bool Check(Bitmap ss, out Direction direction, out int distance)
+        public static bool Check(Bitmap ss, out Direction direction, out int distanceX, out int distanceY)
         {
             int[,,] rgbs = GetRbgValues(ss);
-            distance = 0;
+            distanceX = 0;
+            distanceY = 0;
             direction = Direction.None;
             List<Bitmap> patternImage = new List<Bitmap>();
             for (int i = 1; i <= 20; i++)
@@ -40,7 +41,7 @@ namespace MetCSTool.CSEvents
                 {
                     foreach (var item in matches)
                     {
-                        if (item.Similarity > 0.90)
+                        if (item.Similarity > 0.92)
                         {
                             if (item.Similarity > maxSim)
                             {
@@ -55,7 +56,7 @@ namespace MetCSTool.CSEvents
                     Rectangle character = bestCharacter.Rectangle;
                     int x = character.X;
                     int y = character.Y;
-                    direction = GetDirection(rgbs, x, y, out distance);
+                    direction = GetDirection(rgbs, x, y, out distanceX, out distanceY);
                     return true;
                 }
             }
@@ -72,10 +73,14 @@ namespace MetCSTool.CSEvents
             return copy;
         }
 
-        private static Direction GetDirection(int[,,] rgbs, int x, int y, out int distance)
+        private static Direction GetDirection(int[,,] rgbs, int x, int y, out int distanceX, out int distanceY)
         {
             int halfX = rgbs.GetLength(1) / 2 + 1;
-            distance = Math.Abs(halfX - x);
+            int halfY = rgbs.GetLength(0) / 2 + 1;
+            distanceX = Math.Abs(halfX - x);
+            distanceY = halfY - y;
+
+
             if (x - halfX < -8) { return Direction.Left; }
             if (x - halfX > 8) { return Direction.Right; }
             else return Direction.Middle;

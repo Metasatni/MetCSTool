@@ -215,5 +215,12 @@ namespace MetCSTool
             this._fakeSpinBot.Key = e.KeyCode;
 
         }
+
+        private void FluencyAimCheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox checkBox = sender as CheckBox;
+            if (checkBox.Checked) { this._aimBot.Fluency = true; } else { this._aimBot.Fluency = false; }
+
+        }
     }
 }

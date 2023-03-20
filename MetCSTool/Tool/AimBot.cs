@@ -1,15 +1,7 @@
 ﻿using MetCSTool.CSEvents;
 using MetCSTool.Inputs;
 using MetCSTool.Others;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Media;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MetCSTool.Tool
 {
@@ -20,6 +12,7 @@ namespace MetCSTool.Tool
         private Bitmap _previousScreenshot;
 
         public bool Enabled { get; set; } = false;
+        public bool Fluency { get; set; } = false;
         public int LatencyInMs { get; set; } = 200;
         public int ResolutionWidth { get; set; }
         public int ResolutionHeight { get; set; }
@@ -70,18 +63,36 @@ namespace MetCSTool.Tool
             if (_previousScreenshot is null) _previousScreenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth, this.ResolutionHeight, 100, 20);
             Bitmap screenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth, this.ResolutionHeight, 100, 40);
 
-            bool characterCheck = CharacterCheck.Check(screenshot, out Direction direction, out int distance);
+            bool characterCheck = CharacterCheck.Check(screenshot, out Direction direction, out int distanceX, out int distanceY);
 
 
             if (characterCheck)
             {
                 if (direction == Direction.Left)
                 {
-                    MouseInput.FluencyMouseMoveLeft(Convert.ToInt32(distance*2.3));
+                    if (Fluency)
+                    {
+                        MouseInput.FluencyMouseMoveLeft(Convert.ToInt32(distanceX * 2.3));
+                        MouseInput.FluencyMouseMoveTop(Convert.ToInt32(distanceY * 2.3));
+                        MouseInput.FluencyMouseMoveDown(Convert.ToInt32(distanceY * 2.3));
+                    }
+                    else
+                    {
+                        MouseInput.MouseMove(Convert.ToInt32(-distanceX * 2.3),  Convert.ToInt32(distanceY * 2.3) * -1);
+                    }
                 }
                 if (direction == Direction.Right)
                 {
-                    MouseInput.FluencyMouseMoveRight(Convert.ToInt32(distance*2.3));
+                    if (Fluency)
+                    {
+                        MouseInput.FluencyMouseMoveRight(Convert.ToInt32(distanceX * 2.3));
+                        MouseInput.FluencyMouseMoveTop(Convert.ToInt32(distanceY * 2.3));
+                        MouseInput.FluencyMouseMoveDown(Convert.ToInt32(distanceY * 2.3));
+                    }
+                    else
+                    {
+                        MouseInput.MouseMove(Convert.ToInt32(distanceX * 2.3), - Convert.ToInt32(distanceY * 2.3) * -1);
+                    }
                 }
                 if (direction == Direction.Middle)
                 {

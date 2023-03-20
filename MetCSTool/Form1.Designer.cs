@@ -72,6 +72,7 @@
             AimBotCheckBox = new CheckBox();
             label7 = new Label();
             AimBotLatency = new NumericUpDown();
+            FluencyAimCheckBox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)TriggerLatency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ResolutionWidth).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ResolutionHeight).BeginInit();
@@ -507,6 +508,7 @@
             // 
             // AimBotPage
             // 
+            AimBotPage.Controls.Add(FluencyAimCheckBox);
             AimBotPage.Controls.Add(AimBotKey);
             AimBotPage.Controls.Add(AimBotCheckBox);
             AimBotPage.Controls.Add(label7);
@@ -557,6 +559,17 @@
             AimBotLatency.TabIndex = 9;
             AimBotLatency.Value = new decimal(new int[] { 200, 0, 0, 0 });
             AimBotLatency.ValueChanged += AimLatency_ValueChanged;
+            // 
+            // FluencyAimCheckBox
+            // 
+            FluencyAimCheckBox.AutoSize = true;
+            FluencyAimCheckBox.Location = new Point(384, 18);
+            FluencyAimCheckBox.Name = "FluencyAimCheckBox";
+            FluencyAimCheckBox.Size = new Size(107, 24);
+            FluencyAimCheckBox.TabIndex = 10;
+            FluencyAimCheckBox.Text = "FluencyAim";
+            FluencyAimCheckBox.UseVisualStyleBackColor = true;
+            FluencyAimCheckBox.CheckedChanged += FluencyAimCheckedChanged;
             // 
             // MetCSTool
             // 
@@ -639,5 +652,6 @@
         private Label label7;
         private NumericUpDown AimBotLatency;
         private Button button1;
+        private CheckBox FluencyAimCheckBox;
     }
 }
