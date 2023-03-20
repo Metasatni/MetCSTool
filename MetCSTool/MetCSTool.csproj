@@ -23,6 +23,7 @@
   <ItemGroup>
     <PackageReference Include="AForge.Imaging" Version="2.2.5" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0" />
+    <PackageReference Include="OpenCVSharp" Version="2.4.0.1" />
   </ItemGroup>
 
   <ItemGroup>

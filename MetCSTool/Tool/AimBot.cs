@@ -67,23 +67,23 @@ namespace MetCSTool.Tool
         public void AimBotAiming()
         {
 
-            if (_previousScreenshot is null) _previousScreenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth,this.ResolutionHeight,100,20);
-            Bitmap screenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth,this.ResolutionHeight,100,40);
+            if (_previousScreenshot is null) _previousScreenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth, this.ResolutionHeight, 100, 20);
+            Bitmap screenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth, this.ResolutionHeight, 100, 40);
 
-            bool characterCheck = CharacterCheck.Check(screenshot, out Direction direction);
+            bool characterCheck = CharacterCheck.Check(screenshot, out Direction direction, out int distance);
 
 
             if (characterCheck)
             {
-                if(direction == Direction.Left)
+                if (direction == Direction.Left)
                 {
-                    MouseInput.MouseMove(-30,0);
+                    MouseInput.FluencyMouseMoveLeft(Convert.ToInt32(distance*2.3));
                 }
-                if(direction == Direction.Right)
+                if (direction == Direction.Right)
                 {
-                    MouseInput.MouseMove(30, 0);
+                    MouseInput.FluencyMouseMoveRight(Convert.ToInt32(distance*2.3));
                 }
-                if(direction == Direction.Middle)
+                if (direction == Direction.Middle)
                 {
                     MouseInput.MouseClick();
                 }

@@ -14,15 +14,16 @@ namespace MetCSTool.CSEvents
     }
     internal class CharacterCheck
     {
-        public static bool Check(Bitmap ss, out Direction direction)
+        public static bool Check(Bitmap ss, out Direction direction, out int distance)
         {
             int[,,] rgbs = GetRbgValues(ss);
+            distance = 0;
             direction = Direction.None;
             List<Bitmap> patternImage = new List<Bitmap>();
-            for (int i = 1; i <= 6; i++)
+            for (int i = 1; i <= 20; i++)
             {
-                patternImage.Add(new Bitmap("model_ct" + i + ".png"));
-                patternImage[i-1] = ConvertToFormat(patternImage[i-1], PixelFormat.Format24bppRgb);
+                patternImage.Add(new Bitmap("models/" + i + ".png"));
+                patternImage[i - 1] = ConvertToFormat(patternImage[i - 1], PixelFormat.Format24bppRgb);
             }
             ss = ConvertToFormat(ss, PixelFormat.Format24bppRgb);
             for (int i = 0; i < patternImage.Count; i++)
@@ -39,9 +40,9 @@ namespace MetCSTool.CSEvents
                 {
                     foreach (var item in matches)
                     {
-                        if(item.Similarity > 0.9)
+                        if (item.Similarity > 0.90)
                         {
-                            if(item.Similarity > maxSim)
+                            if (item.Similarity > maxSim)
                             {
                                 indexMaxSim = indCounter;
                                 maxSim = item.Similarity;
@@ -54,7 +55,7 @@ namespace MetCSTool.CSEvents
                     Rectangle character = bestCharacter.Rectangle;
                     int x = character.X;
                     int y = character.Y;
-                    direction = GetDirection(rgbs, x, y);
+                    direction = GetDirection(rgbs, x, y, out distance);
                     return true;
                 }
             }
@@ -71,12 +72,13 @@ namespace MetCSTool.CSEvents
             return copy;
         }
 
-        private static Direction GetDirection(int[,,] rgbs, int x, int y)
+        private static Direction GetDirection(int[,,] rgbs, int x, int y, out int distance)
         {
             int halfX = rgbs.GetLength(1) / 2 + 1;
-            if (x - halfX < -8 ) { return Direction.Left; }
+            distance = Math.Abs(halfX - x);
+            if (x - halfX < -8) { return Direction.Left; }
             if (x - halfX > 8) { return Direction.Right; }
-            else  return Direction.Middle; 
+            else return Direction.Middle;
         }
 
         private static int[,,] GetRbgValues(Bitmap screenshot)
