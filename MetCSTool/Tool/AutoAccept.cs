@@ -26,12 +26,12 @@ namespace MetCSTool.Tool
         }
         public async void SearchAccept()
         {
+            var patternImage = new Bitmap("models/" + "accept.png");
+            patternImage = ConvertToFormat(patternImage, PixelFormat.Format24bppRgb);
             while (this.Enabled)
             {
                 await Task.Run(() => Thread.Sleep(LatencyInMs));
-                var screen = ScreenFunc.TakeScreenshot(ResolutionWidth, ResolutionHeight, ResolutionWidth, ResolutionHeight);
-                var patternImage = new Bitmap("models/" + "accept.png");
-                patternImage = ConvertToFormat(patternImage, PixelFormat.Format24bppRgb);
+                var screen = ScreenFunc.TakeScreenshot(ResolutionWidth, ResolutionHeight, 300, 400);
                 screen = ConvertToFormat(screen, PixelFormat.Format24bppRgb);
                 TemplateMatch[] matches = new ExhaustiveTemplateMatching().ProcessImage(
                 new ResizeBilinear(screen.Width, screen.Height).Apply(screen),
@@ -58,8 +58,9 @@ namespace MetCSTool.Tool
                         Cursor.Position = new Point( Convert.ToInt32(this.ResolutionWidth * 0.6) , Convert.ToInt32(this.ResolutionHeight * 0.5));
                         MouseInput.MouseClick();
                     }
+                screen.Dispose();
+                patternImage.Dispose();
                 }
-
     
             }
         }
