@@ -41,7 +41,7 @@ namespace MetCSTool.CSEvents
                 {
                     foreach (var item in matches)
                     {
-                        if (item.Similarity > 0.92)
+                        if (item.Similarity > 0.90)
                         {
                             if (item.Similarity > maxSim)
                             {

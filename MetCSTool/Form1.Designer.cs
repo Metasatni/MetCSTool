@@ -40,7 +40,6 @@
             label2 = new Label();
             ResolutionList = new ComboBox();
             BunnyHopCheckBox = new CheckBox();
-            BunnyHopKey = new Button();
             JumpShotCheckBox = new CheckBox();
             MainTabs = new TabControl();
             TriggerBotPage = new TabPage();
@@ -57,7 +56,7 @@
             TrigCheck6 = new RadioButton();
             TrigCheck3 = new RadioButton();
             TrigCheck0 = new RadioButton();
-            BunnyHopPage = new TabPage();
+            AutoAcceptPage = new TabPage();
             JumpShotPage = new TabPage();
             JumpShotInEnabled = new CheckBox();
             JumpBindLabel = new Label();
@@ -68,18 +67,18 @@
             button1 = new Button();
             FakeSpinBotCheckBox = new CheckBox();
             AimBotPage = new TabPage();
+            FluencyAimCheckBox = new CheckBox();
             AimBotKey = new Button();
             AimBotCheckBox = new CheckBox();
             label7 = new Label();
             AimBotLatency = new NumericUpDown();
-            FluencyAimCheckBox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)TriggerLatency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ResolutionWidth).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ResolutionHeight).BeginInit();
             MainTabs.SuspendLayout();
             TriggerBotPage.SuspendLayout();
             panel1.SuspendLayout();
-            BunnyHopPage.SuspendLayout();
+            AutoAcceptPage.SuspendLayout();
             JumpShotPage.SuspendLayout();
             SpinBotPage.SuspendLayout();
             AimBotPage.SuspendLayout();
@@ -190,21 +189,11 @@
             BunnyHopCheckBox.AutoSize = true;
             BunnyHopCheckBox.Location = new Point(30, 17);
             BunnyHopCheckBox.Name = "BunnyHopCheckBox";
-            BunnyHopCheckBox.Size = new Size(100, 24);
+            BunnyHopCheckBox.Size = new Size(109, 24);
             BunnyHopCheckBox.TabIndex = 11;
-            BunnyHopCheckBox.Text = "BunnyHop";
+            BunnyHopCheckBox.Text = "AutoAccept";
             BunnyHopCheckBox.UseVisualStyleBackColor = true;
-            BunnyHopCheckBox.CheckedChanged += BunnyHopCheckBox_CheckedChanged;
-            // 
-            // BunnyHopKey
-            // 
-            BunnyHopKey.Location = new Point(136, 14);
-            BunnyHopKey.Name = "BunnyHopKey";
-            BunnyHopKey.Size = new Size(94, 29);
-            BunnyHopKey.TabIndex = 12;
-            BunnyHopKey.Text = "Space";
-            BunnyHopKey.UseVisualStyleBackColor = true;
-            BunnyHopKey.KeyDown += BunnyHopPick;
+            BunnyHopCheckBox.CheckedChanged += AutoAcceptCheckBox_CheckedChanged;
             // 
             // JumpShotCheckBox
             // 
@@ -220,7 +209,7 @@
             // MainTabs
             // 
             MainTabs.Controls.Add(TriggerBotPage);
-            MainTabs.Controls.Add(BunnyHopPage);
+            MainTabs.Controls.Add(AutoAcceptPage);
             MainTabs.Controls.Add(JumpShotPage);
             MainTabs.Controls.Add(SpinBotPage);
             MainTabs.Controls.Add(AimBotPage);
@@ -279,7 +268,7 @@
             // panel1
             // 
             panel1.BackgroundImage = Properties.Resources.crosshair1;
-            panel1.BackgroundImageLayout = ImageLayout.Center;
+            panel1.BackgroundImageLayout = ImageLayout.Stretch;
             panel1.Controls.Add(TrigCheck8);
             panel1.Controls.Add(TrigCheck5);
             panel1.Controls.Add(TrigCheck2);
@@ -395,17 +384,16 @@
             TrigCheck0.UseVisualStyleBackColor = true;
             TrigCheck0.CheckedChanged += TriggerPlace_CheckedChanged;
             // 
-            // BunnyHopPage
+            // AutoAcceptPage
             // 
-            BunnyHopPage.Controls.Add(BunnyHopCheckBox);
-            BunnyHopPage.Controls.Add(BunnyHopKey);
-            BunnyHopPage.Location = new Point(4, 29);
-            BunnyHopPage.Name = "BunnyHopPage";
-            BunnyHopPage.Padding = new Padding(3);
-            BunnyHopPage.Size = new Size(763, 257);
-            BunnyHopPage.TabIndex = 1;
-            BunnyHopPage.Text = "BunnyHop";
-            BunnyHopPage.UseVisualStyleBackColor = true;
+            AutoAcceptPage.Controls.Add(BunnyHopCheckBox);
+            AutoAcceptPage.Location = new Point(4, 29);
+            AutoAcceptPage.Name = "AutoAcceptPage";
+            AutoAcceptPage.Padding = new Padding(3);
+            AutoAcceptPage.Size = new Size(763, 257);
+            AutoAcceptPage.TabIndex = 1;
+            AutoAcceptPage.Text = "AutoAccept";
+            AutoAcceptPage.UseVisualStyleBackColor = true;
             // 
             // JumpShotPage
             // 
@@ -520,6 +508,17 @@
             AimBotPage.Text = "AimBot";
             AimBotPage.UseVisualStyleBackColor = true;
             // 
+            // FluencyAimCheckBox
+            // 
+            FluencyAimCheckBox.AutoSize = true;
+            FluencyAimCheckBox.Location = new Point(384, 18);
+            FluencyAimCheckBox.Name = "FluencyAimCheckBox";
+            FluencyAimCheckBox.Size = new Size(107, 24);
+            FluencyAimCheckBox.TabIndex = 10;
+            FluencyAimCheckBox.Text = "FluencyAim";
+            FluencyAimCheckBox.UseVisualStyleBackColor = true;
+            FluencyAimCheckBox.CheckedChanged += FluencyAimCheckedChanged;
+            // 
             // AimBotKey
             // 
             AimBotKey.Location = new Point(274, 15);
@@ -560,17 +559,6 @@
             AimBotLatency.Value = new decimal(new int[] { 200, 0, 0, 0 });
             AimBotLatency.ValueChanged += AimLatency_ValueChanged;
             // 
-            // FluencyAimCheckBox
-            // 
-            FluencyAimCheckBox.AutoSize = true;
-            FluencyAimCheckBox.Location = new Point(384, 18);
-            FluencyAimCheckBox.Name = "FluencyAimCheckBox";
-            FluencyAimCheckBox.Size = new Size(107, 24);
-            FluencyAimCheckBox.TabIndex = 10;
-            FluencyAimCheckBox.Text = "FluencyAim";
-            FluencyAimCheckBox.UseVisualStyleBackColor = true;
-            FluencyAimCheckBox.CheckedChanged += FluencyAimCheckedChanged;
-            // 
             // MetCSTool
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -593,8 +581,8 @@
             TriggerBotPage.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            BunnyHopPage.ResumeLayout(false);
-            BunnyHopPage.PerformLayout();
+            AutoAcceptPage.ResumeLayout(false);
+            AutoAcceptPage.PerformLayout();
             JumpShotPage.ResumeLayout(false);
             JumpShotPage.PerformLayout();
             SpinBotPage.ResumeLayout(false);
@@ -620,11 +608,10 @@
         private Label label2;
         private ComboBox ResolutionList;
         private CheckBox BunnyHopCheckBox;
-        private Button BunnyHopKey;
         private CheckBox JumpShotCheckBox;
         private TabControl MainTabs;
         private TabPage TriggerBotPage;
-        private TabPage BunnyHopPage;
+        private TabPage AutoAcceptPage;
         private TabPage JumpShotPage;
         private Label JumpBindLabel;
         private Button JumpBind;

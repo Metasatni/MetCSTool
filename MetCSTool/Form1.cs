@@ -7,7 +7,7 @@ namespace MetCSTool
     {
         private readonly KeyboardHook _hook;
         private readonly TriggerBot _triggerBot;
-        private readonly BunnyHop _bunnyHop;
+        private readonly AutoAccept _autoaccept;
         private readonly JumpShot _jumpShot;
         private readonly FakeSpinBot _fakeSpinBot;
         private readonly AimBot _aimBot;
@@ -16,7 +16,7 @@ namespace MetCSTool
         {
             _hook = new KeyboardHook();
             _triggerBot = new TriggerBot(_hook, Keys.C);
-            _bunnyHop = new BunnyHop(_hook, Keys.Space);
+            _autoaccept = new AutoAccept();
             _jumpShot = new JumpShot(_hook, Keys.V, Keys.Space);
             _fakeSpinBot = new FakeSpinBot(_hook, Keys.Z);
             _aimBot = new AimBot(_hook, Keys.M);
@@ -71,6 +71,7 @@ namespace MetCSTool
             NumericUpDown numericUpDown = (NumericUpDown)sender;
             _triggerBot.ResolutionWidth = Convert.ToInt32(numericUpDown.Value);
             _aimBot.ResolutionWidth = Convert.ToInt32(numericUpDown.Value);
+            _autoaccept.ResolutionWidth = Convert.ToInt32(numericUpDown.Value);
         }
 
         private void ResolutionHeight_ValueChanged(object sender, EventArgs e)
@@ -78,6 +79,7 @@ namespace MetCSTool
             NumericUpDown numericUpDown = (NumericUpDown)sender;
             this._triggerBot.ResolutionHeight = Convert.ToInt32(numericUpDown.Value);
             this._aimBot.ResolutionHeight = Convert.ToInt32(numericUpDown.Value);
+            this._autoaccept.ResolutionHeight = Convert.ToInt32(numericUpDown.Value);
         }
         private void CreateResolutions()
         {
@@ -123,20 +125,8 @@ namespace MetCSTool
             ResolutionHeight.Value = Convert.ToDecimal(resolution[1]);
         }
 
-        private void BunnyHopCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            var checkBox = (CheckBox)sender;
-            _bunnyHop.Enabled = checkBox.Checked;
-        }
-
-        private void BunnyHopPick(object sender, KeyEventArgs e)
-        {
-            if (sender is not Button button) return;
-            string key = e.KeyCode.ToString();
-            button.Text = key;
-            this._bunnyHop.Key = e.KeyCode;
-        }
-
+        
+       
         private void JumpShotCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox checkBox = sender as CheckBox;
@@ -221,6 +211,12 @@ namespace MetCSTool
             CheckBox checkBox = sender as CheckBox;
             if (checkBox.Checked) { this._aimBot.Fluency = true; } else { this._aimBot.Fluency = false; }
 
+        }
+
+        private void AutoAcceptCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox checkBox = sender as CheckBox;
+            if (checkBox.Checked) { this._autoaccept.Enabled = true; this._autoaccept.SearchAccept(); } else { this._autoaccept.Enabled = false; }
         }
     }
 }
