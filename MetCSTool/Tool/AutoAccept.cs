@@ -2,7 +2,6 @@
 using AForge.Imaging.Filters;
 using MetCSTool.Inputs;
 using MetCSTool.Others;
-using System.ComponentModel;
 using System.Drawing.Imaging;
 
 namespace MetCSTool.Tool
@@ -31,7 +30,7 @@ namespace MetCSTool.Tool
             while (this.Enabled)
             {
                 await Task.Run(() => Thread.Sleep(LatencyInMs));
-                var screen = ScreenFunc.TakeScreenshot(ResolutionWidth, ResolutionHeight, 300, 400);
+                var screen = ScreenFunc.TakeScreenshot(ResolutionWidth, ResolutionHeight, 100, 200);
                 screen = ConvertToFormat(screen, PixelFormat.Format24bppRgb);
                 TemplateMatch[] matches = new ExhaustiveTemplateMatching().ProcessImage(
                 new ResizeBilinear(screen.Width, screen.Height).Apply(screen),
@@ -59,7 +58,6 @@ namespace MetCSTool.Tool
                         MouseInput.MouseClick();
                     }
                 screen.Dispose();
-                patternImage.Dispose();
                 }
     
             }

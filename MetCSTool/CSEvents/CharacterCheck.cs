@@ -1,6 +1,5 @@
-﻿using AForge.Imaging.Filters;
-using AForge.Imaging;
-using System.Runtime.Intrinsics.X86;
+﻿using AForge.Imaging;
+using AForge.Imaging.Filters;
 using System.Drawing.Imaging;
 
 namespace MetCSTool.CSEvents
