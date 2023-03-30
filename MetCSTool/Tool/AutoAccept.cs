@@ -55,7 +55,7 @@ namespace MetCSTool.Tool
                     }
                     if (indexMaxSim == -1) return;
                     Cursor.Position = new Point(Convert.ToInt32(this.ResolutionWidth * 0.6), Convert.ToInt32(this.ResolutionHeight * 0.5));
-                    //MouseInput.MouseClick();
+                    MouseInput.MouseClick();
                 }
                 screen.Dispose();
             }

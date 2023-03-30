@@ -20,7 +20,7 @@ namespace MetCSTool.CSEvents
             distanceY = 0;
             direction = Direction.None;
             List<Bitmap> patternImage = new List<Bitmap>();
-            for (int i = 1; i <= 20; i++)
+            for (int i = 1; i <= 7; i++)
             {
                 patternImage.Add(new Bitmap("models/" + i + ".png"));
                 patternImage[i - 1] = ConvertToFormat(patternImage[i - 1], PixelFormat.Format24bppRgb);

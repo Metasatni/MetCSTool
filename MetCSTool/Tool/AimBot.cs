@@ -59,9 +59,10 @@ namespace MetCSTool.Tool
         }
         public void AimBotAiming()
         {
-
-            if (_previousScreenshot is null) _previousScreenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth, this.ResolutionHeight, 100, 20);
-            Bitmap screenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth, this.ResolutionHeight, 100, 40);
+            int width = 300;
+            int height = 400;
+            if (_previousScreenshot is null) _previousScreenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth, this.ResolutionHeight, width, height);
+            Bitmap screenshot = ScreenFunc.TakeScreenshot(this.ResolutionWidth, this.ResolutionHeight, width, height);
 
             bool characterCheck = CharacterCheck.Check(screenshot, out Direction direction, out int distanceX, out int distanceY);
 
