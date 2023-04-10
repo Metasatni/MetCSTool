@@ -11,6 +11,7 @@ namespace MetCSTool
         private readonly JumpShot _jumpShot;
         private readonly FakeSpinBot _fakeSpinBot;
         private readonly AimBot _aimBot;
+        private System.Windows.Forms.Timer timer1;
 
         public MetCSTool()
         {
@@ -22,8 +23,7 @@ namespace MetCSTool
             _aimBot = new AimBot(_hook, Keys.M);
 
             InitializeComponent();
-            this.ResolutionWidth.Value = Screen.PrimaryScreen.Bounds.Width;
-            this.ResolutionHeight.Value = Screen.PrimaryScreen.Bounds.Height;
+            InitTimer();
             CreateResolutions();
 
             _hook.KeyDown += (sender, e) =>
@@ -35,6 +35,23 @@ namespace MetCSTool
                     else { JumpShotInEnabled.Checked = true; }
                 }
             };
+        }
+        public void InitTimer()
+        {
+            timer1 = new System.Windows.Forms.Timer();
+            timer1.Tick += new EventHandler(timer1_Tick);
+            timer1.Interval = 5000;
+            timer1.Start();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            GetRes();
+        }
+        private void GetRes()
+        {
+            this.ResolutionWidth.Value = Screen.PrimaryScreen.Bounds.Width;
+            this.ResolutionHeight.Value = Screen.PrimaryScreen.Bounds.Height;
         }
 
         private void MainLoop_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e) { }
